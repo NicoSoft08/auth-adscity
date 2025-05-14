@@ -1,4 +1,4 @@
-# 📘 auth.adscity.net – Centre d'uthentification AdsCity
+# 📘 auth.adscity.net – Centre d'authentification AdsCity
 
 *auth.adscity.net* est le service officiel d'authentiication pour l'écosystème d’AdsCity.  
 Ce sous-domaine gère l’inscription, la connexion, la vérification des appareils, la gestion des tokens, la sécurité des sessions, et les cookies inter-domaines.
