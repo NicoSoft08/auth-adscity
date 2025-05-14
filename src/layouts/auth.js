@@ -67,7 +67,7 @@ const AuthLayoutHeader = () => {
         leftLink = '/signin';
         leftText = language === 'FR'
             ? 'Connexion'
-            : 'Login';
+            : 'Login'; 
     }
 
     return (

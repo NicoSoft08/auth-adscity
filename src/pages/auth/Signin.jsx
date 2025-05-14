@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { LanguageContext } from '../../contexts/LanguageContext';
 import { signinUser } from '../../routes/auth';
 import { Loading, Spinner, Toast } from '../../customs';
@@ -12,7 +12,6 @@ const homeURL = process.env.REACT_APP_HOME_URL;
 
 export default function Signin() {
     const { email } = useParams();
-    const navigate = useNavigate();
     const location = useLocation();
     const { language } = useContext(LanguageContext);
     const [errors, setErrors] = useState({ email: '', password: '', agree: false, captcha: '' });
@@ -21,7 +20,6 @@ export default function Signin() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({ email: email || '', password: '', agree: false });
     const [captchaValue, setCaptchaValue] = useState(null);
-
     // Récupérer l'URL de redirection depuis location.state ou depuis les query params
     const redirectUrl =
         (location.state && location.state.redirectUrl) ||
@@ -121,16 +119,11 @@ export default function Signin() {
                 message: result.message || "Connexion réussie.",
             });
 
-            // 🔹 Redirection selon le rôle
-            if (result.role === 'user') {
-                if (redirectUrl) {
+            if (redirectUrl) {
                     window.location.href = redirectUrl;
                 } else {
                     window.location.href = `${homeURL}`;
                 }
-            } else {
-                navigate('/access-denied');
-            }
         } catch (error) {
             console.error("❌ Erreur lors de la connexion :", error.message);
         } finally {

@@ -5,6 +5,8 @@ const collectDeviceInfo = async () => {
     try {
         const parser = new UAParser();
         const result = parser.getResult();
+        const ip = await fetchIPAddress();
+        const location = await fetchLocation(ip);
 
 
         return {
@@ -12,7 +14,10 @@ const collectDeviceInfo = async () => {
             os: result.os.name || 'Unknown',
             device: result.device.type || 'desktop',
             model: result.device.model || 'Unknown',
-            ip: await fetchIPAddress(),
+            browserVersion: result.browser.version || 'Unknown',
+            osVersion: result.os.version || 'Unknown',
+            ip: ip,
+            location: location || 'Unknown',
         };
     } catch (error) {
         console.error("Erreur lors de la collecte des infos du périphérique :", error);
@@ -46,6 +51,24 @@ const fetchIPAddress = async () => {
     }
 };
 
+// 📌 Fonction pour récupérer la localisation à partir de l'IP
+const fetchLocation = async (ip) => {
+    try {
+        const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération de la localisation');
+        }
 
+        const data = await response.json();
+        return {
+            city: data.city || 'Unknown',
+            region: data.region || 'Unknown',
+            country: data.country_name || 'Unknown',
+        };
+    } catch (error) {
+        console.error("Erreur lors de la récupération de la localisation :", error);
+        return 'Unknown';
+    }
+};
 
 export { collectDeviceInfo };

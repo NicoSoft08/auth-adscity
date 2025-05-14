@@ -6,7 +6,7 @@ const fetchMe = async (idToken) => {
     }
     const response = await fetch(`${backendUrl}/api/users/me`, {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${idToken}`,
@@ -20,6 +20,7 @@ const fetchDataByUserID = async (userID, idToken) => {
     try {
         const response = await fetch(`${backendUrl}/api/users/${userID}`, {
             method: 'GET',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${idToken}`,
