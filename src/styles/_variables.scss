@@ -1,0 +1,147 @@
+$bg-color: #e1ad01;
+
+$transition: 0.5s ease-out;
+
+$one: #fcfcfc;
+$two: #417abc;
+$three: #6698cd;
+$four: #8cb7df;
+$five: #b2d6f1;
+
+$facebook: #1877F2;
+$google: #DB4437;
+$apple: #000000;
+
+$primary-color: #00aaff;
+$secondary-color: #ff6162;
+$tertiary-color: #97cf26;
+$fouth-color: #a069f8;
+
+$black: #000000;
+$blue: #007bff;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #dc3545;
+$orange: #fd7e14;
+$yellow: #ffc107;
+$green: #28a745;
+$teal: #20c997;
+$cyan: #17a2b8;
+$white: #fff;
+$gray: #6c757d;
+$gray-dark: #343a40;
+$primary: blue;
+$secondary: gray;
+$success: green;
+$info: cyan;
+$warning: yellow;
+$danger: red;
+$light: gray;
+$dark: #343a40;
+
+$font-bolder: bolder;
+$font-medium: 600;
+$font-regular: 400;
+$font-light: 300;
+
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes bounce {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+}
+
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

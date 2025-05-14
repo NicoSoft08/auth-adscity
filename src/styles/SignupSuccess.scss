@@ -1,0 +1,173 @@
+@import './fonts';
+@import './variables';
+
+
+.signup-success-page {
+    max-width: 600px;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 2rem;
+    background-color: $white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Ubuntu', sans-serif;
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 100%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        transform: translateY(-10px);
+        animation: slideIn 0.3s ease-in-out forwards;
+
+        .success-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            .success-icon {
+                color: #28a745;
+                animation: pop 0.3s ease-in-out;
+            }
+
+            h2 {
+                font-size: 22px;
+                margin-top: 10px;
+            }
+
+            p {
+                font-size: 16px;
+                text-align: center;
+                color: #555;
+                margin-bottom: 20px;
+            }
+
+            .modal-button {
+                background: #28a745;
+                color: $white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 8px;
+                font-family: 'Ubuntu', sans-serif;
+                cursor: pointer;
+                transition: background 0.2s ease-in-out;
+
+                &:hover {
+                    background: #218838;
+                }
+            }
+        }
+
+
+    }
+
+
+
+
+    h1 {
+        color: $dark;
+        font-size: 1.3rem;
+        font-weight: $font-regular;
+    }
+
+
+    p {
+        color: $dark;
+        font-weight: $font-light;
+        text-align: justify;
+    }
+
+    .error {
+        margin-top: 0.5rem;
+        color: $danger;
+        font-size: 14px;
+        font-weight: $font-regular;
+    }
+
+    .success {
+        margin-top: 0.5rem;
+        color: $success;
+        font-size: 14px;
+        font-weight: $font-regular;
+    }
+
+
+    .code-input {
+        display: flex;
+        justify-content: space-between;
+
+
+        input {
+            width: 35px;
+            height: 35px;
+            text-align: center;
+            font-size: 15px;
+            margin: 0 2px;
+        }
+    }
+
+    a.button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: $dark;
+        color: $white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+
+    a.button:hover {
+        background-color: $gray;
+    }
+
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+
+        a {
+            display: block;
+            margin: 10px 0;
+            color: $gray-dark;
+            text-decoration: none;
+        }
+
+
+        a:hover {
+            text-decoration: underline;
+        }
+    }
+
+
+    .links a {
+        display: block;
+        margin: 10px 0;
+        color: $gray-dark;
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,139 @@
+@import './fonts';
+@import './variables';
+
+
+.loading-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+
+    .loading-container {
+        background-color: $white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        width: 200px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+
+        .loading-logo {
+            width: 60px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loading-header {
+            font-size: 24px;
+            color: $two;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: $font-medium;
+
+            .loading-text {
+                height: 30px;
+            }
+        }
+
+        .loading-span {
+            margin-top: 1rem;
+            // font-size: 17px;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: $font-light;
+        }
+
+        .loading-spinner {
+            margin-top: 0.5rem;
+            border: 4px solid #ccc;
+            border-top-color: #333;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+    }
+}
+
+
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 250px;
+    background-color: #333;
+    color: $white;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0.9;
+    animation: slideIn 0.3s ease-in-out;
+    font-size: 14px;
+
+    .toast-icon {
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+
+    p {
+        margin: 0;
+    }
+
+
+    .close {
+        cursor: pointer;
+        font-size: 20px;
+        margin-left: 10px;
+    }
+
+
+    .toast-progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 0 0 5px 5px;
+
+
+        .progress {
+            height: 100%;
+            background-color: $white;
+            border-radius: 0 0 5px 5px;
+            transition: width 0.1s linear;
+        }
+    }
+}
+
+
+.toast.info {
+    background-color: #007bff;
+}
+
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
+.toast.warning {
+    background-color: #ffc107;
+}
