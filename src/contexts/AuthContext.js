@@ -150,6 +150,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         currentUser,
         userData,
+        loading,
         userRole,
         logout,
         setUserRole, // Include this if you need to update role elsewhere

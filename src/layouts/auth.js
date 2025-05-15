@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { LanguageContext } from '../contexts/LanguageContext';
 import { AuthContext } from '../contexts/AuthContext';
+import { Loading } from '../customs';
 
 const homeURL = process.env.REACT_APP_HOME_URL;
 
@@ -33,8 +34,8 @@ const styles = {
 };
 
 const AuthLayoutHeader = () => {
-    const location = useLocation();
-    const { currentUser } = useContext(AuthContext);
+    const location = window.location;
+    const { currentUser, loading } = useContext(AuthContext);
     const { language } = useContext(LanguageContext);
     const isLogin = location.pathname === '/signin';
     const isSignup = location.pathname === '/signup';
@@ -51,10 +52,9 @@ const AuthLayoutHeader = () => {
     // Check if the user is authenticated
     // Redirect to redirectUrl if authenticated
     useEffect(() => {
-        if (currentUser) {
-            if (redirectUrl) {
-                window.location.href = redirectUrl;
-            }
+        if (currentUser && redirectUrl) {
+            window.location.href = redirectUrl;
+            return;
         }
     }, [currentUser, redirectUrl]);
 
@@ -69,6 +69,8 @@ const AuthLayoutHeader = () => {
             ? 'Connexion'
             : 'Login'; 
     }
+
+    if (loading || !currentUser) return <Loading />
 
     return (
         <div style={styles.wrap}>
