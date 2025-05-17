@@ -70,7 +70,7 @@ const AuthLayoutHeader = () => {
             : 'Login'; 
     }
 
-    if (loading || !currentUser) return <Loading />
+    if (loading) return <Loading />
 
     return (
         <div style={styles.wrap}>

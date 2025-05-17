@@ -48,13 +48,6 @@ const signinUser = async (email, password, captchaToken) => {
         // 🔹 Récupérer les informations sur le périphérique
         const deviceInfo = await collectDeviceInfo();
 
-        // // 🔹 Envoyer les données au backend
-        // const res = api.post('/api/auth/login-user', {
-        //     userID: user.uid,
-        //     deviceInfo,
-        //     captchaToken
-        // });
-        // console.log(res);
         const response = await fetch(`${backendUrl}/api/auth/login-user`, {
             method: 'POST',
             headers: {

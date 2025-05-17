@@ -23,67 +23,47 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for stored user data on initial load
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            try {
-                const parsedUser = JSON.parse(storedUser);
-                setUserRole(parsedUser.role);
-            } catch (error) {
-                console.error("Error parsing stored user data:", error);
-                localStorage.removeItem('user'); // Remove invalid data
-            }
-        }
-
-        // Listen for auth state changes from Firebase
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setLoading(true);
 
             try {
                 if (user) {
-                    setCurrentUser(user);
+                    const idToken = await user.getIdToken(user, true);
+                    const response = await fetchMe(idToken);
 
-                    const idToken = await user.getIdToken();
-
-                    // Fetch user data from backend
-                    const userDataResponse = await fetchMe(idToken);
-                    if (userDataResponse?.data) {
-                        setUserData(userDataResponse.data);
-                        setUserRole(userDataResponse.data.role);
-
-                        // Update online status
-                        await setUserOnlineStatus(user.uid, true, idToken);
-                        Cookies.set('authToken', idToken, { expires: 7 }); // Store token for 7 days
-                    }
-                } else {
-                    // If there was a user before and now there isn't, update online status
-                    const previousUserID = currentUser?.uid;
-                    if (previousUserID) {
-                        const idToken = await currentUser.getIdToken(true);
-                        await setUserOnlineStatus(previousUserID, false, idToken);
-                        Cookies.remove('authToken', {
-                            path: '/',
-                            domain: '.adscity.net'
+                    if (response?.data) {
+                        setCurrentUser(user);
+                        setUserData(response.data);
+                        setUserRole(response.data.role);
+                        Cookies.set('authToken', idToken, {
+                            expires: 7,
+                            sameSite: 'None',
+                            secure: true,
+                            domain: '.adscity.net',
                         });
                     }
+                } else {
+                    // Essayer de récupérer via cookie (HTTP-only)
+                    const response = await fetchMe(); // sans token, juste cookie
 
-                    // Clear user state
-                    setCurrentUser(null);
-                    setUserData(null);
-                    setUserRole(null);
+                    if (response?.data) {
+                        setUserData(response.data);
+                        setUserRole(response.data.role);
+                        setCurrentUser(null); // pas de Firebase ici
+                    }
                 }
             } catch (error) {
-                console.error("Error in auth state change handler:", error);
+                setCurrentUser(null);
+                setUserData(null);
+                setUserRole(null);
             } finally {
                 setLoading(false);
             }
         });
 
-        // Cleanup function
-        return () => {
-            unsubscribe();
-        };
-    }, [currentUser]); // No dependencies to avoid re-running this effect
+        return () => unsubscribe();
+    }, []);
+
 
     // Function to handle logout
     const logout = async () => {
