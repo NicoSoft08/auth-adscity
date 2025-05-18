@@ -82,9 +82,8 @@ export default function Signin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setErrors({}); // Réinitialise les erreurs
+        setErrors({});
 
-        // 🔹 Validation des champs avant d'envoyer la requête
         const errors = validateForm();
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
@@ -94,8 +93,6 @@ export default function Signin() {
 
         try {
             const { email, password } = formData;
-
-            // 🔹 Tentative de connexion
             const result = await signinUser(email, password, captchaValue);
 
             if (!result.success) {
@@ -104,12 +101,8 @@ export default function Signin() {
                     type: 'error',
                     message: result.message || "Une erreur est survenue. Veuillez réessayer.",
                 });
-                // Reset captcha if login fails
-                if (window.grecaptcha) {
-                    window.grecaptcha.reset();
-                }
+                if (window.grecaptcha) window.grecaptcha.reset();
                 setCaptchaValue(null);
-                setLoading(false);
                 return;
             }
 
@@ -119,17 +112,16 @@ export default function Signin() {
                 message: result.message || "Connexion réussie.",
             });
 
-            if (redirectUrl) {
-                    window.location.href = redirectUrl;
-                } else {
-                    window.location.href = `${homeURL}`;
-                }
+            // Redirection
+            window.location.href = redirectUrl || homeURL;
+
         } catch (error) {
-            console.error("❌ Erreur lors de la connexion :", error.message);
+            console.error("❌ Erreur handleSubmit :", error.message);
         } finally {
             setLoading(false);
         }
     };
+
 
     if (loading) {
         return <Loading />

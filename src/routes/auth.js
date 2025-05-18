@@ -34,7 +34,7 @@ const signinUser = async (email, password, captchaToken) => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 🔹 Vérifier si l'utilisateur est vérifié
+        // 🔹 Vérifier que l'email est vérifié
         if (!user.emailVerified) {
             return {
                 success: false,
@@ -42,39 +42,38 @@ const signinUser = async (email, password, captchaToken) => {
             };
         }
 
-        // 🔹 Récupérer le jeton Firebase
-        const idToken = await user.getIdToken();
+        // 🔹 Obtenir le jeton Firebase
+        const idToken = await user.getIdToken(true);
 
-        // 🔹 Récupérer les informations sur le périphérique
+        // 🔹 Récupérer les informations de périphérique
         const deviceInfo = await collectDeviceInfo();
 
-        const response = await fetch(`${backendUrl}/api/auth/login-user`, {
+        // 🔹 Appeler l'API pour créer la session (cookie HTTP-only)
+        const response = await fetch(`${backendUrl}/api/auth/signin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}`,
             },
-            body: JSON.stringify({ userID: user.uid, deviceInfo, captchaToken }),
+            credentials: 'include', // 🔐 important pour activer le cookie
+            body: JSON.stringify({
+                token: idToken,
+                userID: user.uid,
+                deviceInfo,
+                captchaToken,
+            }),
         });
 
         const result = await response.json();
-        // Store the token in localStorage if login was successful
-        if (result.success) {
-            Cookies.set('authToken', idToken, {
-                expires: 7,
-                secure: true,
-                sameSite: 'strict',
-                domain: '.adscity.net',
-                path: '/'
-            });
-        }
-
         return result;
     } catch (error) {
-        console.error('Erreur lors de la connexion de l\'utilisateur :', error);
-        throw error;
-    };
+        console.error("Erreur lors de signinUser :", error);
+        return {
+            success: false,
+            message: "Erreur lors de la tentative de connexion."
+        };
+    }
 };
+
 
 const logoutUser = async () => {
     try {
