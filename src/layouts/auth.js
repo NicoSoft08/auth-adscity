@@ -58,6 +58,8 @@ const AuthLayoutHeader = () => {
         }
     }, [currentUser, redirectUrl]);
 
+    console.log('currentUser:', currentUser);
+
     let leftLink = `${homeURL}`;
     let leftText = language === 'FR'
         ? 'Accueil'

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { fetchMe, setUserOnlineStatus } from '../routes/user';
+import { fetchMe } from '../routes/user';
 import { auth } from '../firebaseConfig';
 import { Loading } from '../customs/index';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -28,31 +28,36 @@ export const AuthProvider = ({ children }) => {
 
             try {
                 if (user) {
-                    const idToken = await user.getIdToken(user, true);
-                    const response = await fetchMe(idToken);
+                    // 🔐 Obtenir le token et le stocker en cookie cross-domain
+                    const idToken = await user.getIdToken(true);
 
-                    if (response?.data) {
-                        setCurrentUser(user);
-                        setUserData(response.data);
-                        setUserRole(response.data.role);
-                        Cookies.set('authToken', idToken, {
-                            expires: 7,
-                            sameSite: 'None',
-                            secure: true,
-                            domain: '.adscity.net',
-                        });
-                    }
+                    Cookies.set('authToken', idToken, {
+                        expires: 7,
+                        secure: true,
+                        sameSite: 'None',
+                        domain: '.adscity.net',
+                        path: '/',
+                    });
+
+                    setCurrentUser(user);
                 } else {
-                    // Essayer de récupérer via cookie (HTTP-only)
-                    const response = await fetchMe(); // sans token, juste cookie
-
-                    if (response?.data) {
-                        setUserData(response.data);
-                        setUserRole(response.data.role);
-                        setCurrentUser(null); // pas de Firebase ici
-                    }
+                    // 🔁 Peut-être que l'user est déjà loggé via cookie uniquement
+                    setCurrentUser(null);
                 }
-            } catch (error) {
+
+                // 🔎 Récupérer l'utilisateur via l’API privée
+                const response = await fetchMe();
+
+                if (response?.success && response.data) {
+                    setUserData(response.data);
+                    setUserRole(response.data.role);
+                } else {
+                    setUserData(null);
+                    setUserRole(null);
+                }
+
+            } catch (err) {
+                console.error("Erreur AuthContext:", err);
                 setCurrentUser(null);
                 setUserData(null);
                 setUserRole(null);
@@ -70,54 +75,26 @@ export const AuthProvider = ({ children }) => {
         try {
             const user = auth.currentUser;
 
-            // 1. Update online status
-            if (user?.uid) {
-                try {
-                    const idToken = await user.getIdToken(true);
-                    await setUserOnlineStatus(user.uid, false, idToken);
-                    Cookies.remove('authToken', {
-                        path: '/',
-                        domain: '.adscity.net'
-                    });
-                } catch (statusError) {
-                    console.warn("Failed to update online status:", statusError);
-                    // Continue with logout even if this fails
-                }
-            }
+            // 1. Supprimer le cookie
+            Cookies.remove('authToken', {
+                path: '/',
+                domain: '.adscity.net',
+            });
 
-            // 2. Server-side logout
+            // 2. Déconnexion côté serveur (optionnel)
             if (user) {
-                try {
-                    await logoutUser(user.uid);
-                } catch (serverError) {
-                    console.warn("Server logout failed:", serverError);
-                    // Continue with local logout even if server logout fails
-                }
+                await logoutUser(user.uid); // Si tu veux notifier le serveur
             }
 
-            // 3. Firebase signout
+            // 3. Déconnexion Firebase
             await signOut(auth);
 
-            // 4. Clear storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            setCurrentUser(null);
+            setUserData(null);
+            setUserRole(null);
 
-            // 5. Return success for UI handling
-            return { success: true, message: "Déconnexion réussie." };
         } catch (error) {
-            console.error("Error during logout:", error);
-
-            // Force signout in case of error
-            try {
-                await signOut(auth);
-            } catch (signOutError) {
-                console.error("Forced signout failed:", signOutError);
-            }
-
-            return {
-                success: false,
-                message: "Erreur lors de la déconnexion. Veuillez réessayer."
-            };
+            console.error("Erreur logout:", error);
         }
     };
 

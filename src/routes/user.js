@@ -1,15 +1,27 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const fetchMe = async () => {
-    const response = await fetch(`${backendUrl}/api/users/me`, {
-        method: 'GET',
-        credentials: 'include',
-    });
+const fetchMe = async (token = null) => {
+    try {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
 
-    if (!response.ok) throw new Error('Not authenticated');
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
 
-    const data = await response.json();
-    return data;
+        const response = await fetch(`${backendUrl}/api/users/me`, {
+            method: 'GET',
+            credentials: 'include',
+            headers,
+        });
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
 };
 
 const fetchDataByUserID = async (userID, idToken) => {
